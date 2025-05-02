@@ -7,7 +7,7 @@ export default function FormsComments(){
             placeholder="Deixe seu comentário"
             className="resize-none border-2 border-black bg-[#D9D9D9]
             focus:border-[#191970] focus:shadow-[0_0_5px_#191970] 
-            focus:border-blur-sm outline-none p-10"
+            outline-none p-10"
             />
             <button
             className="w-[200px] h-[50px] bg-[#191970] p-5 text-white 
