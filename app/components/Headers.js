@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react";
 import Link from "next/link";
+import{MdAccountCircle } from 'react-icons/md'
 
 import Modal from "./Modal";
 import FormRegister from "./FormRegister";
@@ -33,10 +34,12 @@ export default function Header() {
           </>
         ) : (
           <div className="relative group">
-            <img src="/avatar.png" alt="Perfil" className="w-10 h-10 rounded-full cursor-pointer" />
+            <div className="flex items-center gap-2">
+              <MdAccountCircle className="text-white w-10 h-10 rounded-full hover:text-black cursor-pointer" />
+              <button className="text-white font-semibold hover:text-black cursor-poir">Perfil</button>
+            </div>
             <div className="absolute hidden group-hover:block bg-white shadow-md right-0 mt-2 rounded-md">
               <Link href="/perfil" className="block px-4 py-2 hover:bg-gray-100">Perfil</Link>
-              
             </div>
           </div>
         )}
