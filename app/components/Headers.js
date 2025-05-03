@@ -24,10 +24,10 @@ export default function Header() {
       <nav className="flex gap-10 ml-10">
         {!user ? (
           <>
-            <button onClick={() => setLoginModalOpen(true)} className="text-white hover:text-black">
+            <button onClick={() => setLoginModalOpen(true)} className="text-white hover:text-black cursor-pointer">
               LOGIN
             </button>
-            <button onClick={() => setModalOpen(true)} className="text-white hover:text-black">
+            <button onClick={() => setModalOpen(true)} className="text-white hover:text-black cursor-pointer">
               REGISTRE-SE
             </button>
           </>
