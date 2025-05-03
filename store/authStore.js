@@ -27,12 +27,14 @@ const useAuthStore = create(persist(
 
       try {
         const response = await axiosAuth.post('/login', credentials);
+        console.log(response)
         const user = {
           token: response.data.token,
-          id: response.data.userId,
-          name: response.data.userName,
-          email: response.data.userEmail,
-          admin: response.data.userAdmin,
+          id: response.data.Id,
+          name:response.data.Name,
+          userName: response.data.userName,
+          email: response.data.Email,
+          admin: response.data.Admin,
         };
         set({ user, loading: false });
         return response.data;
