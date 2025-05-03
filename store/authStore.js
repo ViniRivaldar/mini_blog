@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { axiosAuth } from '../config/axios';
+import {axiosAuth} from '../config/axios'
+
+
 
 const useAuthStore = create(persist(
   (set) => ({
@@ -27,11 +29,10 @@ const useAuthStore = create(persist(
 
       try {
         const response = await axiosAuth.post('/login', credentials);
-        console.log(response)
         const user = {
           token: response.data.token,
           id: response.data.Id,
-          name:response.data.Name,
+          name: response.data.Name,
           userName: response.data.userName,
           email: response.data.Email,
           admin: response.data.Admin,
@@ -47,19 +48,12 @@ const useAuthStore = create(persist(
       }
     },
 
-    logout: async () => {
-      set({ loading: true });
-
-      try {
-        await axiosAuth.post('/logout');
-        set({ user: null, loading: false, error: null }); 
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Erro ao fazer logout';
-        set({ error: errorMessage, loading: false });
-      }
+    logout:() => {
+      set({ user: null, error: null })
+      window.location.href = '/';
     },
 
-    clearUser: () => set({ user: null, error: null }),
+    setUser: (user) => set({ user }),
 
     clearError: () => set({ error: null }),
   }),
