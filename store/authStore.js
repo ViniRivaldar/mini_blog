@@ -35,12 +35,13 @@ const useAuthStore = create(persist(
           admin: response.data.userAdmin,
         };
         set({ user, loading: false });
-        console.log('logado');
         return response.data;
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'Erro no login';
-        set({ error: errorMessage, loading: false });
+        set({ error: errorMessage });
         throw error;
+      }finally{
+       set({loading: false})
       }
     },
 
