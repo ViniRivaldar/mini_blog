@@ -1,4 +1,4 @@
-export default function Input({ label, name, type = 'text', value, register, error  }) {
+export default function Input({ label, name, type = 'text', value, register }) {
     return (
       <>
         <label htmlFor={name}>{label}</label>
@@ -14,9 +14,6 @@ export default function Input({ label, name, type = 'text', value, register, err
             transition-all duration-200 ease-in-out
             outline-none p-2"
         />
-        {error && (
-          <span className="text-sm text-red-500">{error}</span>
-        )}
       </>
     );
   }
