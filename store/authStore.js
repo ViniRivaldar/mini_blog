@@ -1,11 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {axiosAuth} from '../config/axios'
-
-
+import { axiosAuth } from '../config/axios';
 
 const useAuthStore = create(persist(
-  (set) => ({
+  (set, get) => ({
     user: null,
     loading: false,
     error: null,
@@ -24,6 +22,51 @@ const useAuthStore = create(persist(
       }
     },
 
+    EditUser: async (userData) => {
+      set({ loading: true, error: null });
+    
+      try {
+        const token = get().user?.token;
+        const userId = get().user?.id;
+        
+        if (!token || !userId) {
+          throw new Error('Usuário não autenticado');
+        }
+        
+        console.log('Enviando dados para API:', userData);
+        console.log('ID do usuário:', userId);
+        
+        const dataToSend = {
+          ...userData,
+          username: userData.username
+        };
+        
+        const response = await axiosAuth.put(`/register/${userId}`, dataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log('Resposta do servidor:', response.data);
+    
+        const updatedUser = {
+          ...get().user,
+          name: userData.name || get().user.name,
+          username: userData.username || get().user.username, 
+          userName: userData.username || get().user.userName, 
+          email: userData.email || get().user.email,
+        };
+    
+        set({ user: updatedUser, loading: false });
+        return response.data;
+      } catch (error) {
+        console.error('Erro completo:', error);
+        const errorMessage = error.response?.data?.message || 'Erro ao editar usuário';
+        set({ error: errorMessage, loading: false });
+        throw error;
+      }
+    },
+
     login: async (credentials) => {
       set({ loading: true, error: null });
 
@@ -33,7 +76,8 @@ const useAuthStore = create(persist(
           token: response.data.token,
           id: response.data.Id,
           name: response.data.Name,
-          userName: response.data.userName,
+          username: response.data.userName, 
+          userName: response.data.userName, 
           email: response.data.Email,
           admin: response.data.Admin,
         };
@@ -41,15 +85,13 @@ const useAuthStore = create(persist(
         return response.data;
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'Erro no login';
-        set({ error: errorMessage });
+        set({ error: errorMessage, loading: false });
         throw error;
-      }finally{
-       set({loading: false})
       }
     },
 
-    logout:() => {
-      set({ user: null, error: null })
+    logout: () => {
+      set({ user: null, error: null });
       window.location.href = '/';
     },
 
