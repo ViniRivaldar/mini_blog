@@ -33,9 +33,6 @@ const useAuthStore = create(persist(
           throw new Error('Usuário não autenticado');
         }
         
-        console.log('Enviando dados para API:', userData);
-        console.log('ID do usuário:', userId);
-        
         const dataToSend = {
           ...userData,
           username: userData.username
