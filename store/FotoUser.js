@@ -4,7 +4,6 @@ import {axiosFotoUser} from '../config/axios'
 
 import useAuthStore from './authStore'
 
-
 const FotoUser = create(persist(
   (set,get)=>({
     foto: null,
@@ -65,6 +64,11 @@ const FotoUser = create(persist(
           ...user,
           fotoUrl: null,
         });
+        
+        localStorage.setItem('foto-user-storage', JSON.stringify({
+          state: { foto: null, loading: false, erro: null },
+          version: 0
+        }));
           
         return response.data;
       } catch (err) {
@@ -73,6 +77,11 @@ const FotoUser = create(persist(
           throw err;
         }
       },
+      
+      clearFotoStorage: () => {
+        localStorage.removeItem('foto-user-storage');
+        set({ foto: null, loading: false, erro: null });
+      }
                    
     }),
     {

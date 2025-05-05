@@ -79,6 +79,9 @@ const useAuthStore = create(persist(
           },
         });
         
+        localStorage.removeItem('auth-storage');
+        localStorage.removeItem('foto-user-storage');
+        
         set({ user: null, loading: false });
         window.location.href = '/';
         return response.data;
@@ -114,6 +117,9 @@ const useAuthStore = create(persist(
     },
 
     logout: () => {
+      localStorage.removeItem('auth-storage');
+      localStorage.removeItem('foto-user-storage');
+      
       set({ user: null, error: null });
       window.location.href = '/';
     },
