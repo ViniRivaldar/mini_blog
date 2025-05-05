@@ -7,4 +7,8 @@ const axiosFotoUser = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL_AUTH
 })
 
-export {axiosAuth, axiosFotoUser}
+const axiosComments = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL_AUTH
+})
+
+export {axiosAuth, axiosFotoUser, axiosComments}
