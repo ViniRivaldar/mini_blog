@@ -43,8 +43,6 @@ const useAuthStore = create(persist(
             Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log('Resposta do servidor:', response.data);
     
         const updatedUser = {
           ...get().user,
@@ -59,6 +57,34 @@ const useAuthStore = create(persist(
       } catch (error) {
         console.error('Erro completo:', error);
         const errorMessage = error.response?.data?.message || 'Erro ao editar usuário';
+        set({ error: errorMessage, loading: false });
+        throw error;
+      }
+    },
+
+    deleteUser: async () => {
+      set({ loading: true, error: null });
+      
+      try {
+        const token = get().user?.token;
+        const userId = get().user?.id;
+        
+        if (!token || !userId) {
+          throw new Error('Usuário não autenticado');
+        }
+        
+        const response = await axiosAuth.delete(`/register/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        set({ user: null, loading: false });
+        window.location.href = '/';
+        return response.data;
+      } catch (error) {
+        console.error('Erro ao excluir usuário:', error);
+        const errorMessage = error.response?.data?.message || 'Erro ao excluir usuário';
         set({ error: errorMessage, loading: false });
         throw error;
       }
