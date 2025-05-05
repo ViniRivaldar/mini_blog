@@ -1,18 +1,25 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import{MdAccountCircle } from 'react-icons/md'
-
+import { MdAccountCircle } from 'react-icons/md';
 import Modal from "./Modal";
 import FormRegister from "./FormRegister";
 import FormLogin from "./FormLogin";
 import useAuthStore from "../../store/authStore";
+import FotoUser from "@/store/FotoUser";
 
 export default function Header() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-
   const user = useAuthStore((state) => state.user);
+  const foto = FotoUser((state) => state.foto);
+
+  const [userFotoUrl, setUserFotoUrl] = useState(null); 
+
+  useEffect(() => {
+    const storedFotoUrl = foto?.url || localStorage.getItem('fotoUrl');
+    setUserFotoUrl(storedFotoUrl);
+  }, [foto]);
 
   return (
     <div className="flex justify-center items-center">
@@ -35,7 +42,15 @@ export default function Header() {
         ) : (
           <div className="relative group">
             <div className="flex items-center gap-2">
-              <MdAccountCircle className="text-white w-10 h-10 rounded-full hover:text-black cursor-pointer" />
+              {userFotoUrl ? (
+                <img
+                  src={userFotoUrl}
+                  alt="Foto do usuário"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <MdAccountCircle className="text-white w-10 h-10 rounded-full hover:text-black cursor-pointer" />
+              )}
               <Link href='./perfil' className="text-white font-semibold hover:text-black cursor-pointer">Perfil</Link>
             </div>
             <div className="absolute hidden group-hover:block bg-white shadow-md right-0 mt-2 rounded-md">
