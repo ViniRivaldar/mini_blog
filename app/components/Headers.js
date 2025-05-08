@@ -49,9 +49,9 @@ export default function Header() {
                   className="w-10 h-10 rounded-full object-cover"
                 />
               ) : (
-                <MdAccountCircle className="text-white w-10 h-10 rounded-full hover:text-black cursor-pointer" />
+                <MdAccountCircle className="text-white w-10 h-10 rounded-full" />
               )}
-              <Link href='./perfil' className="text-white font-semibold hover:text-black cursor-pointer">Perfil</Link>
+              <Link href='/perfil' className="text-white font-semibold hover:text-black cursor-pointer">Perfil</Link>
             </div>
             <div className="absolute hidden group-hover:block bg-white shadow-md right-0 mt-2 rounded-md">
               <Link href="/perfil" className="block px-4 py-2 hover:bg-gray-100">Perfil</Link>
