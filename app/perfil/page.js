@@ -5,7 +5,7 @@ import User from "./components/user";
 import useAuthStore from "../../store/authStore";
 
 export default function Perfil() {
-    const { logout, deleteUser, loading } = useAuthStore();
+    const { logout, deleteUser, loading, user } = useAuthStore();
     const [showConfirmation, setShowConfirmation] = useState(false);
 
     const handleDeleteClick = () => {
@@ -15,7 +15,6 @@ export default function Perfil() {
     const handleConfirmDelete = async () => {
         try {
             await deleteUser();
-            // A redireção já é tratada na função deleteUser
         } catch (error) {
             console.error("Erro ao excluir o perfil:", error);
             setShowConfirmation(false);
@@ -31,19 +30,28 @@ export default function Perfil() {
             <User />
             <div className="mt-6 flex justify-center gap-4">
                 <button
-                    className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 flex items-center gap-1"
+                    className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 flex items-center gap-1 cursor-pointer"
                     onClick={logout}
                     disabled={loading}
                 >
                     ↩ Sair
                 </button>
                 <button
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1 cursor-pointer"
                     onClick={handleDeleteClick}
                     disabled={loading}
                 >
                     🗑 Excluir perfil
                 </button>
+                {user?.admin && (
+                    <a
+                        href="/painel" 
+                        className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 flex items-center gap-1"
+                    >
+                        🛠 Painel
+                    </a>
+                )}
+
             </div>
 
             {showConfirmation && (
