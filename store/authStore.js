@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { axiosAuth } from '../config/axios';
+import Cookies from 'js-cookie';
 
 const useAuthStore = create(persist(
   (set, get) => ({
@@ -108,6 +109,10 @@ const useAuthStore = create(persist(
           admin: response.data.Admin,
         };
         set({ user, loading: false });
+
+        Cookies.set('auth-storage', response.data.token, { expires: 7 });
+        Cookies.set('user-admin', response.data.Admin ? 'true' : 'false', { expires: 7 });
+
         return response.data;
       } catch (error) {
         const errorMessage = error.response?.data?.message || 'Erro no login';
@@ -119,6 +124,9 @@ const useAuthStore = create(persist(
     logout: () => {
       localStorage.removeItem('auth-storage');
       localStorage.removeItem('foto-user-storage');
+
+      Cookies.remove('auth-storage');
+      Cookies.remove('user-admin');
       
       set({ user: null, error: null });
       window.location.href = '/';
