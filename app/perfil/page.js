@@ -1,12 +1,34 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import User from "./components/user";
 import useAuthStore from "../../store/authStore";
 
 export default function Perfil() {
     const { logout, deleteUser, loading, user } = useAuthStore();
     const [showConfirmation, setShowConfirmation] = useState(false);
+
+    const PAINEL_ORIGIN = process.env.NEXT_PUBLIC_URL;
+
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.origin !== PAINEL_ORIGIN) {
+                return;
+            }
+
+            if (event.data?.type === 'REQUEST_AUTH_USER') {
+                if (event.source && user) {
+                    event.source.postMessage(
+                        { type: 'AUTH_USER', payload: user },
+                        event.origin
+                    );
+                }
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [user, PAINEL_ORIGIN]);
 
     const handleDeleteClick = () => {
         setShowConfirmation(true);
@@ -23,6 +45,36 @@ export default function Perfil() {
 
     const handleCancelDelete = () => {
         setShowConfirmation(false);
+    };
+
+    const handleOpenPanel = () => {
+        const panelWindow = window.open(PAINEL_ORIGIN, '_blank');
+        
+        if (panelWindow && user) {
+            setTimeout(() => {
+                try {
+                    panelWindow.postMessage(
+                        { type: 'AUTH_USER', payload: user },
+                        PAINEL_ORIGIN
+                    );
+                } catch (e) {
+                    console.error("Erro ao enviar mensagem (1ª tentativa):", e);
+                }
+            }, 1000);
+            
+            setTimeout(() => {
+                try {
+                    if (!panelWindow.closed) {
+                        panelWindow.postMessage(
+                            { type: 'AUTH_USER', payload: user },
+                            PAINEL_ORIGIN
+                        );
+                    }
+                } catch (e) {
+                    console.error("Erro ao enviar mensagem (2ª tentativa):", e);
+                }
+            }, 3000);
+        }
     };
 
     return (
@@ -44,14 +96,13 @@ export default function Perfil() {
                     🗑 Excluir perfil
                 </button>
                 {user?.admin && (
-                    <a
-                        href="/painel" 
-                        className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 flex items-center gap-1"
+                    <button
+                    onClick={handleOpenPanel}
+                    className="px-4 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 flex items-center gap-1"
                     >
                         🛠 Painel
-                    </a>
+                    </button>
                 )}
-
             </div>
 
             {showConfirmation && (
